@@ -17,6 +17,24 @@
             </div>
         </div>
     </header>
+	
+	</br>
+	
+	<section>
+		<div class="container">
+
+			<form method="POST" action="recherche.php">
+				<div class="col-sm-5">
+					<div class="form-group">
+					  <input type="input" name="requete" class="form-control" placeholder ="Rechercher" >
+					</div>
+				</div>
+			<div class="col-sm-2">
+				<button type="submit" class="btn btn-success btn-lg">Rechercher</button>
+			</div>
+			</form>
+		</div>
+	</section>
 
     <!-- About Section -->
     <section>
@@ -36,9 +54,13 @@
             </div>
 			
 	<?php
-		$sql="SELECT * FROM messages ORDER BY date DESC";
+		$limit = 5;  //Limite de commentaire par page
+		if (isset($_GET["page"])) { $page  = $_GET["page"]; } else { $page=1; };  //Si page existante
+		$debut = ($page-1) * $limit; 
+		
+		$sql="SELECT * FROM messages ORDER BY date DESC LIMIT $debut, $limit";
 		$stmt=$pdo->query($sql);
-		while($data=$stmt->fetch()){
+		while($data=$stmt->fetch()){ //Affichage des messages
 	?>
 		<blockquote>
 		<p>
@@ -50,24 +72,24 @@
 		<a href="message.php?a=sup&id=<?=$data['id']?>" class="btn btn-danger">Supprimer</a>
 		<a href="index.php?b=mod&id=<?=$data['id']?>" class="btn btn-primary">Modifier</a>
 		</blockquote>
-	<?php } ?>
+	<?php 
+	}
+		$sql = "SELECT COUNT(id) FROM messages";  
+		$stmt= $pdo->query($sql);  
+		$row = $stmt->fetch();  
+		$total_lignes = $row[0];  
+		$total_pages = ceil($total_lignes / $limit);  //Calcul le nombre de pages
+		$page = "<div class='pagination'>";  
+		for ($i=1; $i<=$total_pages; $i++) //Pagination index
+		{ 
+				  echo ' <a href="index.php?page='.$i.'">'.$i.'</a> ';
+		}  
+		echo $page . "</div>";  
+	?>
 
             <div class="row">
                 <div class="col-md-12">
-                    <blockquote>
-                      <p>Lorem ipsum dolor sit amet, consectetur <a href="#">#adipiscing</a> elit. Integer posuere erat a ante.</p>
-                      <footer>Foo</footer>
-                    </blockquote>
 
-                    <blockquote>
-                      <p>Sed eu tellus vel lectus <a href="#">@rhoncus</a> maximus. Nam eu turpis ac eros pellentesque tincidunt. Maecenas pellentesque consequat libero</p>
-                      <footer>Mauris arcu</footer>
-                    </blockquote>
-
-                    <blockquote>
-                      <p>Nunc volutpat vel nibh vitae blandit</p>
-                      <footer>blandit</footer>
-                    </blockquote>
                 </div>
             </div>
         </div>
