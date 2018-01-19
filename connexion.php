@@ -98,8 +98,7 @@
 		//ON TESTE LE MDP
 		else{
 
-			$query=$pdo->prepare('SELECT id,email,mdp,sid
-			FROM utilisateurs WHERE email = :email');
+			$query=$pdo->prepare('SELECT id,email,mdp,sid FROM utilisateurs WHERE email = :email');
 			$query->bindValue(':email',$_POST['email'], PDO::PARAM_STR);
 			$query->execute();
 			$data=$query->fetch();

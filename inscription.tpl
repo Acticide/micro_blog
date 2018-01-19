@@ -1,4 +1,4 @@
-{include file='../includes/haut.inc.php'}
+{include file='includes/haut.inc.php'}
 	<!-- Header -->
     <header>
         <div class="container">
@@ -34,4 +34,4 @@
             </form>
         </div>
     </div>
-{include file='../includes/bas.inc.php'}
+{include file='includes/bas.inc.php'}
