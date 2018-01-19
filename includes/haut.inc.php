@@ -49,6 +49,13 @@
                     <li class="hidden">
                         <a href="#page-top"></a>
                     </li>
+					<li class="page-scroll">
+						<?php
+							if(!isset($_SESSION['id'])){		
+								echo "<a href='formulaire_inscription.php'>Inscription</a>";
+							}
+						?>
+					</li>
                     <li class="page-scroll">
 						<?php
 							if(isset($_SESSION['id'])){
