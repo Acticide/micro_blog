@@ -1,4 +1,5 @@
 <?php
+	session_start();
 	include('includes/connexion.inc.php');
 	include('includes/haut.inc.php');
 ?>
@@ -18,7 +19,7 @@
     </header>
 
 <?php
-	if(isset($_POST['email'])){
+	/*if(isset($_POST['email'])){
 		$sql="SELECT email,mdp FROM utilisateurs WHERE email=:email And mdp=:mdp";
 		$prep = $pdo->prepare($sql);
 		$prep->bindValue(':email',$_POST['email']);
@@ -35,7 +36,28 @@
 		$cookie = setcookie('sid',$sid,time()+15*60);
 		header("location:index.php");
 	}
-	else{
+	else{*/
+	
+	$message="";
+	if(isset($_SESSION['email'])){
+		$sql="SELECT email,mdp FROM utilisateurs WHERE email=:email And mdp=:mdp";
+		$prep = $pdo->prepare($sql);
+		$prep->bindValue(':email',$_POST['email']);
+		$prep->bindValue(':mdp',$_POST['mdp']);
+		$prep->execute();
+		$prep->rowCount();
+		$sid= md5($_POST['email'].time());
+		$sql2="UPDATE utilisateurs SET sid=:sid WHERE email = :email";
+		$prep2 = $pdo->prepare($sql2);
+		$prep2->bindValue(':sid',$sid);
+		$prep2->bindValue(':email',$_POST['email']);
+		$prep2->execute();
+		$prep2->rowCount();
+		$cookie = setcookie('sid',$sid,time()+15*60);
+	}else
+	//AFFICHE LE FORMULAIRE
+	if (!isset($_POST['email'])) //On est dans la page de formulaire
+	{
 ?>
 	<form class="form-horizontal" action="connexion.php" method="POST">
 	  <div class="form-group">
@@ -65,7 +87,48 @@
 		</div>
 	  </div>
 	</form>
-<?php } ?>
+<?php }
+	else{
+		
+		//SI UN DES CHAMP EST VIDE
+		if (empty($_POST['email']) || empty($_POST['mdp'])) {
+			$message='Un des champs est vide';
+		
+		}
+		//ON TESTE LE MDP
+		else{
+
+			$query=$pdo->prepare('SELECT id,email,mdp,sid
+			FROM utilisateurs WHERE email = :email');
+			$query->bindValue(':email',$_POST['email'], PDO::PARAM_STR);
+			$query->execute();
+			$data=$query->fetch();
+			$mdp=/*md5*/($_POST['mdp']);
+			if( $data['mdp'] == $mdp ){
+				$_SESSION['id']= $data['id'];
+				$_SESSION['email']= $data['email'];
+				$_SESSION['mdp']=$data['mdp'];
+				$_SESSION['sid']=$data['sid'];
+				
+				$message='<h3>Bienvenue'.$_SESSION["email"].'vous êtes connecté</h3>';	
+				header('Location:index.php');
+
+
+			}
+			//mdp ou pseudo non correspondant
+			else{
+				$message='Pseudo ou mdp invalide';
+				
+
+			}
+	 $query->CloseCursor();	
+	}
+	echo '
+		<div class="in">
+		<p id="mess_co">'.$message.'</p>
+		</div>';
+	} 
+?>
 	
 <?php
 	include('includes/bas.inc.php');

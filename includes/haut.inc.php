@@ -49,8 +49,23 @@
                     <li class="hidden">
                         <a href="#page-top"></a>
                     </li>
+					<li class="page-scroll">
+						<?php
+							if(!isset($_SESSION['id'])){		
+								echo "<a href='inscription.php'>Inscription</a>";
+							}
+						?>
+					</li>
                     <li class="page-scroll">
-                        <a href="connexion.php">Connexion</a>
+						<?php
+							if(isset($_SESSION['id'])){
+								echo "<a href='deconnexion.php' id='utilisateurs'>Deconnexion</a>";
+							}
+							else{
+								echo "<a href='connexion.php' id='utilisateurs'>Connexion</a>";
+							}
+						?>
+					</li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->

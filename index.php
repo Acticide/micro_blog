@@ -1,7 +1,8 @@
 <?php
+	session_start();
 	include('includes/connexion.inc.php');
 	include('includes/haut.inc.php');
-	?>
+?>
 
     <!-- Header -->
     <header>
