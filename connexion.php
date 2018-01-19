@@ -117,8 +117,6 @@
 			//mdp ou pseudo non correspondant
 			else{
 				$message='Pseudo ou mdp invalide';
-				
-
 			}
 	 $query->CloseCursor();	
 	}
